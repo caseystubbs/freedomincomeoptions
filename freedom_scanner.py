@@ -2,9 +2,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import time
-import requests
 import json
-import logging
 from datetime import datetime, timedelta
 from scipy.stats import norm
 
@@ -28,24 +26,6 @@ WATCHLIST = [
     "OXY", "SLB", "HAL", "DVN", "EOG", "COP", "MSTR", "CLSK", "HUT", "WULF"
 ]
 
-# --- HEAVY STEALTH MODE ---
-# We are adding a full browser profile to trick Yahoo's firewall
-session = requests.Session()
-session.headers.update({
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.9',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Referer': 'https://finance.yahoo.com/',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-    'Sec-Fetch-Dest': 'document',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-Site': 'none',
-    'Sec-Fetch-User': '?1',
-    'Cache-Control': 'max-age=0',
-})
-
 # --- MATH ENGINE ---
 def calculate_delta(S, K, T, r, sigma, option_type="put"):
     try:
@@ -58,43 +38,41 @@ def calculate_delta(S, K, T, r, sigma, option_type="put"):
 
 def run_scanner():
     opportunities = []
-    print(f"--- THE PROFIT HUNTER (DIAGNOSTIC MODE) ---")
+    print(f"--- THE PROFIT HUNTER (NATIVE MODE) ---")
     print(f"Scanning {len(WATCHLIST)} stocks...")
     print(f"Time: {datetime.now().strftime('%H:%M:%S')}")
 
     for i, ticker in enumerate(WATCHLIST):
-        # We wrap this in a TRY block but we PRINT the error now
         try:
-            # Random delay
-            time.sleep(np.random.uniform(1.0, 2.0))
+            # Random delay to be polite (0.5 to 1.5s)
+            time.sleep(np.random.uniform(0.5, 1.5))
             
-            # Use the custom session
-            stock = yf.Ticker(ticker, session=session)
+            # REMOVED CUSTOM SESSION -> Let YF handle the connection
+            stock = yf.Ticker(ticker)
             
             # 1. Get Price
             try:
-                # Force a fresh download to test connection
-                hist = stock.history(period="1d", proxy=None)
-                if hist.empty: 
-                    print(f"❌ {ticker}: Empty Price Data (Yahoo Blocked?)")
-                    continue
-                price = hist['Close'].iloc[-1]
-            except Exception as e:
-                print(f"❌ {ticker}: Price Error -> {e}")
+                # Using 'fast_info' is often more reliable and faster than 'history'
+                try:
+                    price = stock.fast_info['last_price']
+                except:
+                    # Fallback if fast_info fails
+                    hist = stock.history(period="1d")
+                    if hist.empty: 
+                        print(f"Skipping {ticker} (No Data)")
+                        continue
+                    price = hist['Close'].iloc[-1]
+            except: 
+                print(f"Error fetching price for {ticker}")
                 continue
 
-            if price < MIN_PRICE: 
-                # Silent skip for low price is fine
-                continue
+            if price < MIN_PRICE: continue
 
             # 2. Get Options
             try:
                 exps = stock.options
-                if not exps: 
-                    print(f"⚠️ {ticker}: No Options Chain Found")
-                    continue
-            except Exception as e:
-                print(f"❌ {ticker}: Options Error -> {e}")
+                if not exps: continue
+            except:
                 continue
 
             valid_dates = []
@@ -105,7 +83,6 @@ def run_scanner():
             
             if not valid_dates: continue
             
-            # If we get here, connection is working!
             print(f"[{i+1}/{len(WATCHLIST)}] {ticker} (${price:.2f})...")
 
             for date in valid_dates:
@@ -117,7 +94,6 @@ def run_scanner():
                     T = dte / 365.0
                     r = 0.045 
 
-                    # Filter OTM
                     otm_puts = puts[puts['strike'] < price]
 
                     for index, short_leg in otm_puts.iterrows():
@@ -161,20 +137,17 @@ def run_scanner():
                                 opportunities.append(trade)
                                 print(f"   >>> FOUND! {ticker} +EV: ${ev:.2f}")
 
-                except Exception as e:
-                    # Only print serious chain errors
-                    # print(f"Chain error {ticker}: {e}")
-                    continue 
+                except: continue 
 
         except Exception as e:
-            print(f"CRITICAL ERROR on {ticker}: {e}")
+            # print(f"Skipping {ticker}: {e}")
             continue
 
     # --- GENERATE HTML ---
     print("\nGenerating Report...")
     
     if not opportunities:
-        print("⚠️ No trades found. Generating safety report.")
+        print("⚠️ No trades found. Generating empty report.")
         html_content = f"""
         <!DOCTYPE html>
         <html lang="en">
