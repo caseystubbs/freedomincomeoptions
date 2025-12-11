@@ -2,8 +2,8 @@ name: Daily Market Scan
 
 on:
   schedule:
-    # Runs at 14:45 UTC (9:45 AM EST) Mon-Fri
-    - cron: '45 14 * * 1-5'
+    # Runs at minute 45 of hours 14-20 UTC (9:45 AM - 3:45 PM EST)
+    - cron: '45 14-20 * * 1-5'
   workflow_dispatch: # Allows manual button clicks
 
 permissions:
