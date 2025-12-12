@@ -2,3 +2,5 @@ yfinance
 pandas
 numpy
 scipy
+finvizfinance
+lxml
