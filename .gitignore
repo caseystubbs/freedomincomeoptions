@@ -1,0 +1,11 @@
+# Ignore virtual environments
+venv/
+env/
+.env
+
+# Ignore python cache files
+__pycache__/
+*.pyc
+
+# Ignore the output reports (so you don't upload old HTML files)
+*.html
