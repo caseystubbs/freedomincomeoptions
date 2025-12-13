@@ -1,39 +1,34 @@
-name: Daily Market Scan
+name: Frequent Market Scan
 
 on:
   schedule:
-    # Runs at minute 45 of hours 14-20 UTC (9:45 AM - 3:45 PM EST)
-    - cron: '45 14-20 * * 1-5'
-  workflow_dispatch: # Allows manual button clicks
+    # 1. Runs at 9:30 AM EST (14:30 UTC)
+    - cron: '30 14 * * 1-5'
+    
+    # 2. Runs every 30 mins from 10:00 AM to 3:30 PM EST
+    # (15:00 UTC to 20:30 UTC)
+    - cron: '*/30 15-20 * * 1-5'
 
-permissions:
-  contents: write
+  # Allows you to click "Run" manually anytime
+  workflow_dispatch:
 
 jobs:
-  build:
+  run-scanner:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-    - name: Install libraries
-      run: |
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
-    - name: Run Scanner
-      run: |
-        python freedom_scanner.py
-
-    - name: Commit and Push Results
-      run: |
-        git config --global user.name 'FreedomBot'
-        git config --global user.email 'bot@noreply.github.com'
-        git add view_results.html
-        git commit -m "Daily Scan Update" || echo "No changes to commit"
-        git push
+      - name: Run Freedom Scanner
+        run: |
+          python Freedom_Final.py

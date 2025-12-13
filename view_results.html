@@ -1,1837 +1,485 @@
 
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>The Profit Hunter Results</title>
-            <style>
-                :root { --primary: #2c3e50; --accent: #2980b9; --bg: #f4f7f6; --highlight-bg: #fff8e1; --highlight-border: #3498db; }
-                body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 30px; color: #333; }
-                .container { max-width: 1200px; margin: 0 auto; }
-                h1 { color: var(--primary); text-align: center; margin-bottom: 5px; }
-                .timestamp { text-align: center; color: #888; font-size: 14px; margin-bottom: 40px; }
-                .top-picks-box { background-color: var(--highlight-bg); border: 3px solid var(--highlight-border); border-radius: 12px; padding: 30px; margin-bottom: 40px; box-shadow: 0 10px 25px rgba(52, 152, 219, 0.15); }
-                .top-header { text-align: center; font-size: 22px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; }
-                .top-header span { color: #e67e22; }
-                table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; }
-                th { background: var(--primary); color: white; padding: 15px; text-align: left; font-size: 14px; }
-                td { padding: 15px; border-bottom: 1px solid #eee; font-size: 15px; vertical-align: middle; }
-                tr:hover { background: #fcfcfc; }
-                .ticker-box { font-weight: bold; font-size: 16px; color: var(--primary); }
-                .price-tag { font-size: 12px; color: #888; }
-                .roi-cell { font-weight: bold; color: var(--primary); }
-                .ev-cell { font-weight: 800; color: #27ae60; background: #eafaf1; padding: 8px; border-radius: 4px; }
-                .exp-date { font-weight: bold; color: #555; }
-                .top-picks-box table { border: 1px solid #e0e0e0; }
-                .top-picks-box th { background: #3498db; }
-                h2 { margin-top: 0; color: #555; font-size: 18px; margin-bottom: 15px; border-left: 5px solid #ccc; padding-left: 10px; }
-            </style>
-        </head>
-        <body>
-        <div class="container">
-            <h1>The Profit Hunter: Daily Opportunities</h1>
-            <div class="timestamp">Generated on: 2025-12-11 20:55:58 (EST)</div>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Freedom Income Options - Spread Scanner</title>
+        <link rel="icon" href="https://freedomincomeoptions.com/wp-content/uploads/2025/03/freedom-income-options-512-x-512.png" sizes="32x32" />
+        <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f4f4f9; }
+            
+            header { 
+                background-color: #ffffff; 
+                border-bottom: 3px solid #4CAF50; 
+                padding: 15px 20px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: space-between;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            .logo-container { display: flex; align-items: center; }
+            .logo-container img { height: 60px; margin-right: 15px; }
+            .header-title { font-size: 24px; font-weight: bold; color: #333; }
+            .date-display { font-size: 16px; color: #333; }
+            
+            .tab { overflow: hidden; background-color: #333; display: flex; justify-content: center; flex-wrap: wrap; }
+            .tab button { background-color: inherit; border: none; outline: none; cursor: pointer; padding: 14px 20px; font-size: 16px; font-weight: bold; color: white; transition: 0.3s; }
+            .tab button:hover { background-color: #4CAF50; }
+            .tab button.active { background-color: #4CAF50; }
+            
+            .tabcontent { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+            
+            .best-trades-box {
+                background-color: #FFD700; 
+                border: 4px solid #0000FF; 
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 30px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            .best-trades-title {
+                text-align: center;
+                color: #0000FF;
+                font-size: 22px;
+                font-weight: 900;
+                text-transform: uppercase;
+                margin-top: 0;
+            }
+            
+            table { width: 100%; border-collapse: collapse; background-color: white; border-radius: 5px; overflow: hidden; }
+            th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+            th { background-color: #2E8B57; color: white; text-transform: uppercase; font-size: 0.9em; }
+            tr:hover { background-color: #f1f1f1; }
+            
+            .profit-factor { color: #2E8B57; font-weight: 900; font-size: 1.1em; }
+            .best-row { background-color: #fff9c4; border-bottom: 2px solid #ccc; }
+        </style>
+    </head>
+    <body>
 
-            <div class="top-picks-box">
-                <div class="top-header"><span>⭐</span> Best Trades of the Day <span>⭐</span></div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Ticker</th>
-                            <th>Expiration</th>
-                            <th>Strikes</th>
-                            <th>Credit / Risk</th>
-                            <th>Win Prob</th>
-                            <th>ROI</th>
-                            <th>EV (Per Trade)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        
-                <tr>
-                    <td style="font-weight:bold; color:#e67e22; font-size:18px;">#1</td>
-                    <td>
-                        <div class="ticker-box">MDB</div>
-                        <div class="price-tag">$420.17</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>400.0 / 395.0</td>
-                    <td>$2.8 / $2.2</td>
-                    <td>69.7%</td>
-                    <td class="roi-cell">127.3%</td>
-                    <td><span class="ev-cell">+$1.28</span></td>
-                </tr>
-            
-                <tr>
-                    <td style="font-weight:bold; color:#e67e22; font-size:18px;">#2</td>
-                    <td>
-                        <div class="ticker-box">MDB</div>
-                        <div class="price-tag">$420.17</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>390.0 / 385.0</td>
-                    <td>$2.36 / $2.64</td>
-                    <td>76.2%</td>
-                    <td class="roi-cell">89.4%</td>
-                    <td><span class="ev-cell">+$1.17</span></td>
-                </tr>
-            
-                <tr>
-                    <td style="font-weight:bold; color:#e67e22; font-size:18px;">#3</td>
-                    <td>
-                        <div class="ticker-box">MDB</div>
-                        <div class="price-tag">$420.17</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>395.0 / 390.0</td>
-                    <td>$2.22 / $2.78</td>
-                    <td>77.0%</td>
-                    <td class="roi-cell">79.9%</td>
-                    <td><span class="ev-cell">+$1.07</span></td>
-                </tr>
-            
-                <tr>
-                    <td style="font-weight:bold; color:#e67e22; font-size:18px;">#4</td>
-                    <td>
-                        <div class="ticker-box">SPOT</div>
-                        <div class="price-tag">$599.5</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>550.0 / 545.0</td>
-                    <td>$1.95 / $3.05</td>
-                    <td>78.5%</td>
-                    <td class="roi-cell">63.9%</td>
-                    <td><span class="ev-cell">+$0.88</span></td>
-                </tr>
-            
-                <tr>
-                    <td style="font-weight:bold; color:#e67e22; font-size:18px;">#5</td>
-                    <td>
-                        <div class="ticker-box">CRWD</div>
-                        <div class="price-tag">$518.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>455.0 / 450.0</td>
-                    <td>$1.6 / $3.4</td>
-                    <td>83.3%</td>
-                    <td class="roi-cell">47.1%</td>
-                    <td><span class="ev-cell">+$0.76</span></td>
-                </tr>
-            
-                    </tbody>
-                </table>
-            </div>
+    <header>
+        <div class="logo-container">
+            <img src="https://freedomincomeoptions.com/wp-content/uploads/2025/03/Freedom-income-options-440-x-100.png" alt="Freedom Income Options">
+            <div class="header-title">Daily Spread Scanner</div>
+        </div>
+        <div class="date-display"><b>Date: December, 13 2025</b></div>
+    </header>
 
-            <h2>All Profitable Opportunities</h2>
+    <div class="tab">
+        <button class="tablinks active" onclick="openCity(event, 'BestTrades')">★ BEST TRADES</button>
+    <button class="tablinks" onclick="openCity(event, 'tab_20251219')">2025-12-19</button><button class="tablinks" onclick="openCity(event, 'tab_20251226')">2025-12-26</button><button class="tablinks" onclick="openCity(event, 'tab_20260102')">2026-01-02</button><button class="tablinks" onclick="openCity(event, 'tab_20260109')">2026-01-09</button><button class="tablinks" onclick="openCity(event, 'tab_20260116')">2026-01-16</button><button class="tablinks" onclick="openCity(event, 'tab_20260123')">2026-01-23</button><button class="tablinks" onclick="openCity(event, 'tab_20260220')">2026-02-20</button>
+    </div>
+
+    <div id="BestTrades" class="tabcontent" style="display: block;">
+        <div class="best-trades-box">
+            <h3 class="best-trades-title">🏆 Top 3 Freedom Spreads (8-Week Max)</h3>
             <table>
                 <thead>
                     <tr>
+                        <th>Rank</th>
                         <th>Ticker</th>
                         <th>Expiration</th>
-                        <th>Strikes</th>
-                        <th>Credit / Risk</th>
-                        <th>Win Prob</th>
-                        <th>ROI</th>
-                        <th>EV (Per Trade)</th>
+                        <th>Spread (Short/Long)</th>
+                        <th>Prob. Win</th>
+                        <th>Net Credit</th>
+                        <th>Profit Factor</th>
                     </tr>
                 </thead>
                 <tbody>
+    
+        <tr class="best-row">
+            <td><b>#1</b></td>
+            <td><b>AMD</b></td>
+            <td>2026-02-20</td>
+            <td>195.0 / 190.0</td>
+            <td>68.6%</td>
+            <td><b>$1.65</b></td>
+            <td class="profit-factor" style="color: green;">0.08</td>
+        </tr>
         
-                <tr>
-                    <td>
-                        <div class="ticker-box">CRWD</div>
-                        <div class="price-tag">$518.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>490.0 / 485.0</td>
-                    <td>$2.12 / $2.88</td>
-                    <td>70.3%</td>
-                    <td class="roi-cell">73.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.64</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>170.0 / 165.0</td>
-                    <td>$2.08 / $2.92</td>
-                    <td>70.8%</td>
-                    <td class="roi-cell">70.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.62</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>170.0 / 165.0</td>
-                    <td>$1.92 / $3.08</td>
-                    <td>73.6%</td>
-                    <td class="roi-cell">62.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.61</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">NOW</div>
-                        <div class="price-tag">$866.04</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>815.0 / 810.0</td>
-                    <td>$1.7 / $3.3</td>
-                    <td>77.6%</td>
-                    <td class="roi-cell">51.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.58</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CRWD</div>
-                        <div class="price-tag">$518.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>470.0 / 465.0</td>
-                    <td>$1.53 / $3.47</td>
-                    <td>80.5%</td>
-                    <td class="roi-cell">44.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.56</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GS</div>
-                        <div class="price-tag">$914.07</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>885.0 / 880.0</td>
-                    <td>$2.17 / $2.83</td>
-                    <td>66.6%</td>
-                    <td class="roi-cell">77.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.51</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>170.0 / 165.0</td>
-                    <td>$1.88 / $3.12</td>
-                    <td>72.6%</td>
-                    <td class="roi-cell">60.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.51</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>170.0 / 165.0</td>
-                    <td>$1.92 / $3.08</td>
-                    <td>71.4%</td>
-                    <td class="roi-cell">62.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.49</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MDB</div>
-                        <div class="price-tag">$420.17</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>385.0 / 380.0</td>
-                    <td>$1.48 / $3.52</td>
-                    <td>80.1%</td>
-                    <td class="roi-cell">42.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.49</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MDB</div>
-                        <div class="price-tag">$420.17</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>375.0 / 370.0</td>
-                    <td>$1.28 / $3.72</td>
-                    <td>84.0%</td>
-                    <td class="roi-cell">34.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.48</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>160.0 / 155.0</td>
-                    <td>$1.34 / $3.66</td>
-                    <td>82.3%</td>
-                    <td class="roi-cell">36.4%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.45</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">SPOT</div>
-                        <div class="price-tag">$599.5</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>555.0 / 550.0</td>
-                    <td>$1.33 / $3.68</td>
-                    <td>81.5%</td>
-                    <td class="roi-cell">36.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.4</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CAT</div>
-                        <div class="price-tag">$626.37</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>590.0 / 585.0</td>
-                    <td>$1.24 / $3.76</td>
-                    <td>82.7%</td>
-                    <td class="roi-cell">33.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.38</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">ADBE</div>
-                        <div class="price-tag">$350.76</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>325.0 / 320.0</td>
-                    <td>$1.48 / $3.52</td>
-                    <td>77.8%</td>
-                    <td class="roi-cell">41.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.37</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">SPOT</div>
-                        <div class="price-tag">$599.5</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>565.0 / 560.0</td>
-                    <td>$1.4 / $3.6</td>
-                    <td>79.4%</td>
-                    <td class="roi-cell">38.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.37</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>43.0 / 38.0</td>
-                    <td>$2.06 / $2.94</td>
-                    <td>66.3%</td>
-                    <td class="roi-cell">69.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.37</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">SNOW</div>
-                        <div class="price-tag">$220.3</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>210.0 / 205.0</td>
-                    <td>$1.93 / $3.08</td>
-                    <td>68.6%</td>
-                    <td class="roi-cell">62.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.36</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>160.0 / 155.0</td>
-                    <td>$1.4 / $3.6</td>
-                    <td>79.2%</td>
-                    <td class="roi-cell">38.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.36</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>39.0 / 34.0</td>
-                    <td>$1.57 / $3.43</td>
-                    <td>75.3%</td>
-                    <td class="roi-cell">45.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.34</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>41.0 / 36.0</td>
-                    <td>$1.8 / $3.2</td>
-                    <td>70.9%</td>
-                    <td class="roi-cell">56.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.34</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>42.0 / 37.0</td>
-                    <td>$1.91 / $3.09</td>
-                    <td>68.6%</td>
-                    <td class="roi-cell">61.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.34</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GS</div>
-                        <div class="price-tag">$914.07</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>880.0 / 875.0</td>
-                    <td>$1.88 / $3.12</td>
-                    <td>69.0%</td>
-                    <td class="roi-cell">60.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.33</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>245.0 / 240.0</td>
-                    <td>$1.48 / $3.52</td>
-                    <td>77.2%</td>
-                    <td class="roi-cell">41.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.33</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">NOW</div>
-                        <div class="price-tag">$866.04</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>835.0 / 830.0</td>
-                    <td>$1.85 / $3.15</td>
-                    <td>69.2%</td>
-                    <td class="roi-cell">58.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.31</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>40.0 / 35.0</td>
-                    <td>$1.65 / $3.35</td>
-                    <td>73.2%</td>
-                    <td class="roi-cell">49.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.31</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>160.0 / 155.0</td>
-                    <td>$1.3 / $3.7</td>
-                    <td>80.1%</td>
-                    <td class="roi-cell">35.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.3</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MDB</div>
-                        <div class="price-tag">$420.17</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>380.0 / 375.0</td>
-                    <td>$1.33 / $3.68</td>
-                    <td>79.5%</td>
-                    <td class="roi-cell">36.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.3</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>255.0 / 250.0</td>
-                    <td>$1.77 / $3.23</td>
-                    <td>70.4%</td>
-                    <td class="roi-cell">55.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.29</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">SPOT</div>
-                        <div class="price-tag">$599.5</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>575.0 / 570.0</td>
-                    <td>$1.65 / $3.35</td>
-                    <td>72.9%</td>
-                    <td class="roi-cell">49.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.29</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CAT</div>
-                        <div class="price-tag">$626.37</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>575.0 / 570.0</td>
-                    <td>$1.3 / $3.7</td>
-                    <td>79.6%</td>
-                    <td class="roi-cell">35.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.28</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>175.0 / 170.0</td>
-                    <td>$1.95 / $3.05</td>
-                    <td>66.6%</td>
-                    <td class="roi-cell">63.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.28</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>42.0 / 37.0</td>
-                    <td>$1.83 / $3.17</td>
-                    <td>69.1%</td>
-                    <td class="roi-cell">57.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.28</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>160.0 / 155.0</td>
-                    <td>$1.52 / $3.48</td>
-                    <td>75.0%</td>
-                    <td class="roi-cell">43.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.27</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">NOW</div>
-                        <div class="price-tag">$866.04</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>790.0 / 785.0</td>
-                    <td>$1.0 / $4.0</td>
-                    <td>85.0%</td>
-                    <td class="roi-cell">25.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.25</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>38.0 / 33.0</td>
-                    <td>$1.37 / $3.63</td>
-                    <td>77.5%</td>
-                    <td class="roi-cell">37.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.25</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">JNJ</div>
-                        <div class="price-tag">$210.35</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>190.0 / 185.0</td>
-                    <td>$1.06 / $3.94</td>
-                    <td>83.7%</td>
-                    <td class="roi-cell">26.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.24</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>165.0 / 160.0</td>
-                    <td>$1.68 / $3.32</td>
-                    <td>71.2%</td>
-                    <td class="roi-cell">50.4%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.24</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>37.0 / 32.0</td>
-                    <td>$1.26 / $3.74</td>
-                    <td>79.5%</td>
-                    <td class="roi-cell">33.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.24</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>250.0 / 245.0</td>
-                    <td>$1.45 / $3.55</td>
-                    <td>75.6%</td>
-                    <td class="roi-cell">40.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.23</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>155.0 / 150.0</td>
-                    <td>$1.07 / $3.93</td>
-                    <td>83.1%</td>
-                    <td class="roi-cell">27.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.22</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>43.0 / 38.0</td>
-                    <td>$1.86 / $3.14</td>
-                    <td>67.1%</td>
-                    <td class="roi-cell">59.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.22</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>240.0 / 235.0</td>
-                    <td>$1.33 / $3.67</td>
-                    <td>77.7%</td>
-                    <td class="roi-cell">36.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.21</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CRWD</div>
-                        <div class="price-tag">$518.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>480.0 / 475.0</td>
-                    <td>$1.17 / $3.83</td>
-                    <td>80.7%</td>
-                    <td class="roi-cell">30.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.21</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CRWD</div>
-                        <div class="price-tag">$518.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>500.0 / 495.0</td>
-                    <td>$1.82 / $3.18</td>
-                    <td>67.8%</td>
-                    <td class="roi-cell">57.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.21</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>165.0 / 160.0</td>
-                    <td>$1.52 / $3.48</td>
-                    <td>73.7%</td>
-                    <td class="roi-cell">43.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.21</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CRWD</div>
-                        <div class="price-tag">$518.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>475.0 / 470.0</td>
-                    <td>$1.3 / $3.7</td>
-                    <td>78.0%</td>
-                    <td class="roi-cell">35.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.2</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>150.0 / 145.0</td>
-                    <td>$1.12 / $3.88</td>
-                    <td>81.6%</td>
-                    <td class="roi-cell">29.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.2</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>40.0 / 35.0</td>
-                    <td>$1.4 / $3.6</td>
-                    <td>75.9%</td>
-                    <td class="roi-cell">39.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.2</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>35.0 / 30.0</td>
-                    <td>$1.02 / $3.98</td>
-                    <td>83.5%</td>
-                    <td class="roi-cell">25.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.2</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>36.0 / 31.0</td>
-                    <td>$1.12 / $3.88</td>
-                    <td>81.5%</td>
-                    <td class="roi-cell">28.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.2</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>41.0 / 36.0</td>
-                    <td>$1.54 / $3.46</td>
-                    <td>73.0%</td>
-                    <td class="roi-cell">44.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.19</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>420.0 / 415.0</td>
-                    <td>$1.7 / $3.3</td>
-                    <td>69.6%</td>
-                    <td class="roi-cell">51.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.18</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">SPOT</div>
-                        <div class="price-tag">$599.5</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>560.0 / 555.0</td>
-                    <td>$1.25 / $3.75</td>
-                    <td>78.7%</td>
-                    <td class="roi-cell">33.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.18</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">SPOT</div>
-                        <div class="price-tag">$599.5</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>575.0 / 570.0</td>
-                    <td>$1.68 / $3.32</td>
-                    <td>70.1%</td>
-                    <td class="roi-cell">50.4%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.18</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>425.0 / 420.0</td>
-                    <td>$1.83 / $3.17</td>
-                    <td>66.9%</td>
-                    <td class="roi-cell">57.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.17</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MA</div>
-                        <div class="price-tag">$564.52</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>545.0 / 540.0</td>
-                    <td>$1.32 / $3.68</td>
-                    <td>77.0%</td>
-                    <td class="roi-cell">35.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.17</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>175.0 / 170.0</td>
-                    <td>$1.8 / $3.2</td>
-                    <td>67.4%</td>
-                    <td class="roi-cell">56.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.17</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>38.0 / 33.0</td>
-                    <td>$1.22 / $3.78</td>
-                    <td>79.0%</td>
-                    <td class="roi-cell">32.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.17</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>410.0 / 405.0</td>
-                    <td>$1.35 / $3.65</td>
-                    <td>76.2%</td>
-                    <td class="roi-cell">37.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>420.0 / 415.0</td>
-                    <td>$1.62 / $3.38</td>
-                    <td>70.7%</td>
-                    <td class="roi-cell">48.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>425.0 / 420.0</td>
-                    <td>$1.77 / $3.23</td>
-                    <td>67.7%</td>
-                    <td class="roi-cell">55.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GS</div>
-                        <div class="price-tag">$914.07</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>840.0 / 835.0</td>
-                    <td>$1.07 / $3.93</td>
-                    <td>81.8%</td>
-                    <td class="roi-cell">27.4%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">V</div>
-                        <div class="price-tag">$346.47</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>330.0 / 325.0</td>
-                    <td>$1.33 / $3.67</td>
-                    <td>76.7%</td>
-                    <td class="roi-cell">36.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">SHOP</div>
-                        <div class="price-tag">$164.95</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>150.0 / 145.0</td>
-                    <td>$1.37 / $3.63</td>
-                    <td>75.8%</td>
-                    <td class="roi-cell">37.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CAT</div>
-                        <div class="price-tag">$626.37</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>600.0 / 595.0</td>
-                    <td>$1.68 / $3.32</td>
-                    <td>69.8%</td>
-                    <td class="roi-cell">50.4%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CRWD</div>
-                        <div class="price-tag">$518.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>480.0 / 475.0</td>
-                    <td>$0.94 / $4.06</td>
-                    <td>84.6%</td>
-                    <td class="roi-cell">23.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">CRWD</div>
-                        <div class="price-tag">$518.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>505.0 / 500.0</td>
-                    <td>$1.88 / $3.12</td>
-                    <td>65.8%</td>
-                    <td class="roi-cell">60.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">ZS</div>
-                        <div class="price-tag">$242.03</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>230.0 / 225.0</td>
-                    <td>$1.65 / $3.35</td>
-                    <td>70.2%</td>
-                    <td class="roi-cell">49.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.16</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">ORCL</div>
-                        <div class="price-tag">$199.05</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>190.0 / 185.0</td>
-                    <td>$1.8 / $3.2</td>
-                    <td>67.1%</td>
-                    <td class="roi-cell">56.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.15</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>155.0 / 150.0</td>
-                    <td>$0.95 / $4.05</td>
-                    <td>84.0%</td>
-                    <td class="roi-cell">23.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.15</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>160.0 / 155.0</td>
-                    <td>$1.35 / $3.65</td>
-                    <td>76.0%</td>
-                    <td class="roi-cell">37.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.15</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>165.0 / 160.0</td>
-                    <td>$1.55 / $3.45</td>
-                    <td>72.0%</td>
-                    <td class="roi-cell">44.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.15</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>410.0 / 405.0</td>
-                    <td>$1.4 / $3.6</td>
-                    <td>74.8%</td>
-                    <td class="roi-cell">38.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.14</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>415.0 / 410.0</td>
-                    <td>$1.53 / $3.47</td>
-                    <td>72.3%</td>
-                    <td class="roi-cell">43.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.14</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>250.0 / 245.0</td>
-                    <td>$1.6 / $3.4</td>
-                    <td>70.8%</td>
-                    <td class="roi-cell">47.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.14</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>170.0 / 165.0</td>
-                    <td>$1.75 / $3.25</td>
-                    <td>67.8%</td>
-                    <td class="roi-cell">53.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.14</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>42.0 / 37.0</td>
-                    <td>$1.63 / $3.37</td>
-                    <td>70.2%</td>
-                    <td class="roi-cell">48.4%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.14</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">AMD</div>
-                        <div class="price-tag">$221.46</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>205.0 / 200.0</td>
-                    <td>$1.53 / $3.47</td>
-                    <td>72.0%</td>
-                    <td class="roi-cell">43.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.13</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>430.0 / 425.0</td>
-                    <td>$1.85 / $3.15</td>
-                    <td>65.7%</td>
-                    <td class="roi-cell">58.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.13</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">META</div>
-                        <div class="price-tag">$652.27</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>610.0 / 605.0</td>
-                    <td>$1.18 / $3.82</td>
-                    <td>79.0%</td>
-                    <td class="roi-cell">30.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.13</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>175.0 / 170.0</td>
-                    <td>$1.72 / $3.28</td>
-                    <td>68.1%</td>
-                    <td class="roi-cell">52.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.13</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">SPOT</div>
-                        <div class="price-tag">$599.5</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>555.0 / 550.0</td>
-                    <td>$0.9 / $4.1</td>
-                    <td>84.6%</td>
-                    <td class="roi-cell">22.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.13</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">META</div>
-                        <div class="price-tag">$652.27</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>635.0 / 630.0</td>
-                    <td>$1.8 / $3.2</td>
-                    <td>66.4%</td>
-                    <td class="roi-cell">56.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.12</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>245.0 / 240.0</td>
-                    <td>$1.4 / $3.6</td>
-                    <td>74.4%</td>
-                    <td class="roi-cell">38.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.12</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HOOD</div>
-                        <div class="price-tag">$123.32</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>117.0 / 112.0</td>
-                    <td>$1.8 / $3.2</td>
-                    <td>66.5%</td>
-                    <td class="roi-cell">56.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.12</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>170.0 / 165.0</td>
-                    <td>$1.68 / $3.32</td>
-                    <td>68.9%</td>
-                    <td class="roi-cell">50.4%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.12</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GS</div>
-                        <div class="price-tag">$914.07</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>865.0 / 860.0</td>
-                    <td>$1.1 / $3.9</td>
-                    <td>80.3%</td>
-                    <td class="roi-cell">28.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.11</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GS</div>
-                        <div class="price-tag">$914.07</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>890.0 / 885.0</td>
-                    <td>$1.83 / $3.17</td>
-                    <td>65.6%</td>
-                    <td class="roi-cell">57.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.11</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GS</div>
-                        <div class="price-tag">$914.07</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>860.0 / 855.0</td>
-                    <td>$1.3 / $3.7</td>
-                    <td>76.3%</td>
-                    <td class="roi-cell">35.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.11</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HOOD</div>
-                        <div class="price-tag">$123.32</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>115.0 / 110.0</td>
-                    <td>$1.6 / $3.4</td>
-                    <td>70.2%</td>
-                    <td class="roi-cell">46.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.11</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">ROKU</div>
-                        <div class="price-tag">$106.38</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>95.0 / 90.0</td>
-                    <td>$0.94 / $4.07</td>
-                    <td>83.6%</td>
-                    <td class="roi-cell">23.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.11</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>154.0 / 149.0</td>
-                    <td>$1.1 / $3.9</td>
-                    <td>80.3%</td>
-                    <td class="roi-cell">28.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.11</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>170.0 / 165.0</td>
-                    <td>$1.75 / $3.25</td>
-                    <td>67.3%</td>
-                    <td class="roi-cell">53.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.11</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">AMD</div>
-                        <div class="price-tag">$221.46</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>210.0 / 205.0</td>
-                    <td>$1.75 / $3.25</td>
-                    <td>67.0%</td>
-                    <td class="roi-cell">53.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.1</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>400.0 / 395.0</td>
-                    <td>$1.05 / $3.95</td>
-                    <td>81.0%</td>
-                    <td class="roi-cell">26.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.1</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>395.0 / 390.0</td>
-                    <td>$1.03 / $3.97</td>
-                    <td>81.5%</td>
-                    <td class="roi-cell">25.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.1</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>400.0 / 395.0</td>
-                    <td>$1.12 / $3.88</td>
-                    <td>79.4%</td>
-                    <td class="roi-cell">29.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.1</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">LULU</div>
-                        <div class="price-tag">$186.54</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>165.0 / 160.0</td>
-                    <td>$1.2 / $3.8</td>
-                    <td>78.0%</td>
-                    <td class="roi-cell">31.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.1</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>149.0 / 144.0</td>
-                    <td>$0.93 / $4.07</td>
-                    <td>83.4%</td>
-                    <td class="roi-cell">22.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.1</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>425.0 / 420.0</td>
-                    <td>$1.53 / $3.47</td>
-                    <td>71.4%</td>
-                    <td class="roi-cell">43.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.09</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>235.0 / 230.0</td>
-                    <td>$1.05 / $3.95</td>
-                    <td>80.8%</td>
-                    <td class="roi-cell">26.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.09</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HOOD</div>
-                        <div class="price-tag">$123.32</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>110.0 / 105.0</td>
-                    <td>$1.3 / $3.7</td>
-                    <td>75.7%</td>
-                    <td class="roi-cell">35.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.09</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>165.0 / 160.0</td>
-                    <td>$1.28 / $3.72</td>
-                    <td>76.3%</td>
-                    <td class="roi-cell">34.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.09</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>160.0 / 155.0</td>
-                    <td>$1.17 / $3.82</td>
-                    <td>78.2%</td>
-                    <td class="roi-cell">30.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.09</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>150.0 / 145.0</td>
-                    <td>$0.95 / $4.05</td>
-                    <td>82.8%</td>
-                    <td class="roi-cell">23.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.09</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">QQQ</div>
-                        <div class="price-tag">$625.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>606.0 / 601.0</td>
-                    <td>$1.45 / $3.55</td>
-                    <td>72.6%</td>
-                    <td class="roi-cell">40.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.08</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">AMD</div>
-                        <div class="price-tag">$221.46</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>200.0 / 195.0</td>
-                    <td>$1.25 / $3.75</td>
-                    <td>76.6%</td>
-                    <td class="roi-cell">33.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.08</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>415.0 / 410.0</td>
-                    <td>$1.3 / $3.7</td>
-                    <td>75.5%</td>
-                    <td class="roi-cell">35.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.08</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>425.0 / 420.0</td>
-                    <td>$1.62 / $3.38</td>
-                    <td>69.2%</td>
-                    <td class="roi-cell">48.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.08</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>235.0 / 230.0</td>
-                    <td>$0.86 / $4.14</td>
-                    <td>84.5%</td>
-                    <td class="roi-cell">20.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.08</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>250.0 / 245.0</td>
-                    <td>$1.42 / $3.58</td>
-                    <td>73.1%</td>
-                    <td class="roi-cell">39.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.08</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GE</div>
-                        <div class="price-tag">$289.35</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>255.0 / 250.0</td>
-                    <td>$0.85 / $4.15</td>
-                    <td>84.7%</td>
-                    <td class="roi-cell">20.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.08</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">AMD</div>
-                        <div class="price-tag">$221.46</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>210.0 / 205.0</td>
-                    <td>$1.62 / $3.38</td>
-                    <td>68.8%</td>
-                    <td class="roi-cell">48.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>430.0 / 425.0</td>
-                    <td>$1.7 / $3.3</td>
-                    <td>67.4%</td>
-                    <td class="roi-cell">51.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>410.0 / 405.0</td>
-                    <td>$1.15 / $3.85</td>
-                    <td>78.4%</td>
-                    <td class="roi-cell">29.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>420.0 / 415.0</td>
-                    <td>$1.45 / $3.55</td>
-                    <td>72.4%</td>
-                    <td class="roi-cell">40.8%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">META</div>
-                        <div class="price-tag">$652.27</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>640.0 / 635.0</td>
-                    <td>$1.8 / $3.2</td>
-                    <td>65.4%</td>
-                    <td class="roi-cell">56.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">META</div>
-                        <div class="price-tag">$652.27</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>630.0 / 625.0</td>
-                    <td>$1.65 / $3.35</td>
-                    <td>68.4%</td>
-                    <td class="roi-cell">49.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GS</div>
-                        <div class="price-tag">$914.07</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>880.0 / 875.0</td>
-                    <td>$1.4 / $3.6</td>
-                    <td>73.5%</td>
-                    <td class="roi-cell">38.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">GS</div>
-                        <div class="price-tag">$914.07</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>885.0 / 880.0</td>
-                    <td>$1.67 / $3.33</td>
-                    <td>67.9%</td>
-                    <td class="roi-cell">50.4%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HOOD</div>
-                        <div class="price-tag">$123.32</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>115.0 / 110.0</td>
-                    <td>$1.65 / $3.35</td>
-                    <td>68.5%</td>
-                    <td class="roi-cell">49.3%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">MSTR</div>
-                        <div class="price-tag">$183.39</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>145.0 / 140.0</td>
-                    <td>$0.85 / $4.15</td>
-                    <td>84.5%</td>
-                    <td class="roi-cell">20.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.07</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">AMD</div>
-                        <div class="price-tag">$221.46</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>190.0 / 185.0</td>
-                    <td>$0.84 / $4.16</td>
-                    <td>84.5%</td>
-                    <td class="roi-cell">20.2%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.06</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>405.0 / 400.0</td>
-                    <td>$1.2 / $3.8</td>
-                    <td>77.2%</td>
-                    <td class="roi-cell">31.6%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.06</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-09</td>
-                    <td>255.0 / 250.0</td>
-                    <td>$1.62 / $3.38</td>
-                    <td>68.8%</td>
-                    <td class="roi-cell">48.1%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.06</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">COIN</div>
-                        <div class="price-tag">$270.23</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>255.0 / 250.0</td>
-                    <td>$1.7 / $3.3</td>
-                    <td>67.1%</td>
-                    <td class="roi-cell">51.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.06</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">ORCL</div>
-                        <div class="price-tag">$199.05</div>
-                    </td>
-                    <td class="exp-date">2026-01-23</td>
-                    <td>180.0 / 175.0</td>
-                    <td>$1.18 / $3.82</td>
-                    <td>77.8%</td>
-                    <td class="roi-cell">30.7%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.06</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>415.0 / 410.0</td>
-                    <td>$1.12 / $3.88</td>
-                    <td>78.5%</td>
-                    <td class="roi-cell">29.0%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.05</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">TSLA</div>
-                        <div class="price-tag">$446.43</div>
-                    </td>
-                    <td class="exp-date">2026-01-16</td>
-                    <td>415.0 / 410.0</td>
-                    <td>$1.38 / $3.62</td>
-                    <td>73.5%</td>
-                    <td class="roi-cell">37.9%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.05</td>
-                </tr>
-            
-                <tr>
-                    <td>
-                        <div class="ticker-box">HUT</div>
-                        <div class="price-tag">$46.69</div>
-                    </td>
-                    <td class="exp-date">2026-01-02</td>
-                    <td>38.0 / 33.0</td>
-                    <td>$0.99 / $4.01</td>
-                    <td>81.3%</td>
-                    <td class="roi-cell">24.5%</td>
-                    <td style="font-weight:bold; color:#27ae60;">+$0.05</td>
-                </tr>
-            
+        <tr class="best-row">
+            <td><b>#2</b></td>
+            <td><b>APLD</b></td>
+            <td>2026-02-20</td>
+            <td>25.0 / 24.0</td>
+            <td>69.4%</td>
+            <td><b>$0.30</b></td>
+            <td class="profit-factor" style="color: red;">-0.01</td>
+        </tr>
+        
+        <tr class="best-row">
+            <td><b>#3</b></td>
+            <td><b>APLD</b></td>
+            <td>2026-01-16</td>
+            <td>25.0 / 24.0</td>
+            <td>69.3%</td>
+            <td><b>$0.30</b></td>
+            <td class="profit-factor" style="color: red;">-0.01</td>
+        </tr>
+        
                 </tbody>
             </table>
         </div>
-        </body>
-        </html>
-        
+        <p style="text-align:center; color:#666;">*Highest IV & Highest Profit Factor Trades.</p>
+    </div>
+    <div id="tab_20251219" class="tabcontent" style="display: none;"><h3>Top Spreads for 2025-12-19</h3><table><thead><tr><th>Ticker</th><th>Spread</th><th>Prob. Win</th><th>Net Credit</th><th>Profit Factor</th></tr></thead><tbody><tr>
+                    <td><b>AAP</b></td>
+                    <td>45.0 / 44.0</td>
+                    <td>67.8%</td>
+                    <td>$0.22</td>
+                    <td class="profit-factor" style="color: red;">-0.10</td>
+                </tr><tr>
+                    <td><b>ASTS</b></td>
+                    <td>72.0 / 69.0</td>
+                    <td>70.1%</td>
+                    <td>$0.77</td>
+                    <td class="profit-factor" style="color: red;">-0.13</td>
+                </tr><tr>
+                    <td><b>AI</b></td>
+                    <td>14.5 / 13.5</td>
+                    <td>76.7%</td>
+                    <td>$0.09</td>
+                    <td class="profit-factor" style="color: red;">-0.14</td>
+                </tr><tr>
+                    <td><b>AMDL</b></td>
+                    <td>14.5 / 13.5</td>
+                    <td>67.9%</td>
+                    <td>$0.15</td>
+                    <td class="profit-factor" style="color: red;">-0.17</td>
+                </tr><tr>
+                    <td><b>AMZU</b></td>
+                    <td>32.8 / 31.8</td>
+                    <td>72.0%</td>
+                    <td>$0.10</td>
+                    <td class="profit-factor" style="color: red;">-0.18</td>
+                </tr><tr>
+                    <td><b>APLD</b></td>
+                    <td>26.0 / 25.0</td>
+                    <td>70.2%</td>
+                    <td>$0.08</td>
+                    <td class="profit-factor" style="color: red;">-0.22</td>
+                </tr><tr>
+                    <td><b>AFRM</b></td>
+                    <td>65.0 / 62.5</td>
+                    <td>67.3%</td>
+                    <td>$0.58</td>
+                    <td class="profit-factor" style="color: red;">-0.24</td>
+                </tr><tr>
+                    <td><b>AR</b></td>
+                    <td>34.5 / 33.5</td>
+                    <td>66.3%</td>
+                    <td>$0.10</td>
+                    <td class="profit-factor" style="color: red;">-0.24</td>
+                </tr><tr>
+                    <td><b>ANET</b></td>
+                    <td>121.0 / 118.0</td>
+                    <td>69.0%</td>
+                    <td>$0.65</td>
+                    <td class="profit-factor" style="color: red;">-0.28</td>
+                </tr><tr>
+                    <td><b>AAPU</b></td>
+                    <td>34.83 / 33.83</td>
+                    <td>64.6%</td>
+                    <td>$0.05</td>
+                    <td class="profit-factor" style="color: red;">-0.30</td>
+                </tr></tbody></table></div><div id="tab_20251226" class="tabcontent" style="display: none;"><h3>Top Spreads for 2025-12-26</h3><table><thead><tr><th>Ticker</th><th>Spread</th><th>Prob. Win</th><th>Net Credit</th><th>Profit Factor</th></tr></thead><tbody><tr>
+                    <td><b>AI</b></td>
+                    <td>14.5 / 13.5</td>
+                    <td>72.2%</td>
+                    <td>$0.17</td>
+                    <td class="profit-factor" style="color: red;">-0.11</td>
+                </tr><tr>
+                    <td><b>ASTS</b></td>
+                    <td>71.0 / 68.0</td>
+                    <td>68.9%</td>
+                    <td>$0.79</td>
+                    <td class="profit-factor" style="color: red;">-0.14</td>
+                </tr><tr>
+                    <td><b>ANET</b></td>
+                    <td>120.0 / 117.0</td>
+                    <td>69.2%</td>
+                    <td>$0.75</td>
+                    <td class="profit-factor" style="color: red;">-0.17</td>
+                </tr><tr>
+                    <td><b>ARKG</b></td>
+                    <td>29.0 / 28.0</td>
+                    <td>68.3%</td>
+                    <td>$0.15</td>
+                    <td class="profit-factor" style="color: red;">-0.17</td>
+                </tr><tr>
+                    <td><b>APA</b></td>
+                    <td>25.0 / 24.0</td>
+                    <td>70.6%</td>
+                    <td>$0.12</td>
+                    <td class="profit-factor" style="color: red;">-0.17</td>
+                </tr><tr>
+                    <td><b>APLD</b></td>
+                    <td>25.5 / 24.0</td>
+                    <td>71.2%</td>
+                    <td>$0.24</td>
+                    <td class="profit-factor" style="color: red;">-0.19</td>
+                </tr><tr>
+                    <td><b>AFRM</b></td>
+                    <td>64.0 / 61.0</td>
+                    <td>69.7%</td>
+                    <td>$0.61</td>
+                    <td class="profit-factor" style="color: red;">-0.30</td>
+                </tr><tr>
+                    <td><b>AMD</b></td>
+                    <td>202.5 / 197.5</td>
+                    <td>69.2%</td>
+                    <td>$1.19</td>
+                    <td class="profit-factor" style="color: red;">-0.35</td>
+                </tr><tr>
+                    <td><b>AVGO</b></td>
+                    <td>345.0 / 340.0</td>
+                    <td>70.7%</td>
+                    <td>$1.05</td>
+                    <td class="profit-factor" style="color: red;">-0.42</td>
+                </tr><tr>
+                    <td><b>ARM</b></td>
+                    <td>126.0 / 123.0</td>
+                    <td>71.3%</td>
+                    <td>$0.37</td>
+                    <td class="profit-factor" style="color: red;">-0.49</td>
+                </tr></tbody></table></div><div id="tab_20260102" class="tabcontent" style="display: none;"><h3>Top Spreads for 2026-01-02</h3><table><thead><tr><th>Ticker</th><th>Spread</th><th>Prob. Win</th><th>Net Credit</th><th>Profit Factor</th></tr></thead><tbody><tr>
+                    <td><b>AI</b></td>
+                    <td>14.5 / 13.5</td>
+                    <td>68.8%</td>
+                    <td>$0.16</td>
+                    <td class="profit-factor" style="color: red;">-0.15</td>
+                </tr><tr>
+                    <td><b>AR</b></td>
+                    <td>34.0 / 33.0</td>
+                    <td>66.9%</td>
+                    <td>$0.15</td>
+                    <td class="profit-factor" style="color: red;">-0.18</td>
+                </tr><tr>
+                    <td><b>AAP</b></td>
+                    <td>44.0 / 43.0</td>
+                    <td>70.2%</td>
+                    <td>$0.06</td>
+                    <td class="profit-factor" style="color: red;">-0.24</td>
+                </tr><tr>
+                    <td><b>AFRM</b></td>
+                    <td>63.0 / 60.0</td>
+                    <td>71.7%</td>
+                    <td>$0.58</td>
+                    <td class="profit-factor" style="color: red;">-0.27</td>
+                </tr><tr>
+                    <td><b>ASTS</b></td>
+                    <td>70.0 / 67.0</td>
+                    <td>69.5%</td>
+                    <td>$0.63</td>
+                    <td class="profit-factor" style="color: red;">-0.29</td>
+                </tr><tr>
+                    <td><b>AMD</b></td>
+                    <td>200.0 / 195.0</td>
+                    <td>70.8%</td>
+                    <td>$1.15</td>
+                    <td class="profit-factor" style="color: red;">-0.31</td>
+                </tr><tr>
+                    <td><b>ANET</b></td>
+                    <td>119.0 / 116.0</td>
+                    <td>69.5%</td>
+                    <td>$0.55</td>
+                    <td class="profit-factor" style="color: red;">-0.36</td>
+                </tr><tr>
+                    <td><b>BABA</b></td>
+                    <td>150.0 / 145.0</td>
+                    <td>71.2%</td>
+                    <td>$1.03</td>
+                    <td class="profit-factor" style="color: red;">-0.41</td>
+                </tr><tr>
+                    <td><b>AEM</b></td>
+                    <td>160.0 / 155.0</td>
+                    <td>73.8%</td>
+                    <td>$0.85</td>
+                    <td class="profit-factor" style="color: red;">-0.46</td>
+                </tr><tr>
+                    <td><b>AVAV</b></td>
+                    <td>230.0 / 225.0</td>
+                    <td>68.0%</td>
+                    <td>$1.10</td>
+                    <td class="profit-factor" style="color: red;">-0.50</td>
+                </tr></tbody></table></div><div id="tab_20260109" class="tabcontent" style="display: none;"><h3>Top Spreads for 2026-01-09</h3><table><thead><tr><th>Ticker</th><th>Spread</th><th>Prob. Win</th><th>Net Credit</th><th>Profit Factor</th></tr></thead><tbody><tr>
+                    <td><b>AI</b></td>
+                    <td>14.5 / 13.5</td>
+                    <td>67.3%</td>
+                    <td>$0.23</td>
+                    <td class="profit-factor" style="color: red;">-0.10</td>
+                </tr><tr>
+                    <td><b>APLD</b></td>
+                    <td>25.0 / 24.0</td>
+                    <td>70.6%</td>
+                    <td>$0.13</td>
+                    <td class="profit-factor" style="color: red;">-0.16</td>
+                </tr><tr>
+                    <td><b>AR</b></td>
+                    <td>34.0 / 33.0</td>
+                    <td>66.1%</td>
+                    <td>$0.15</td>
+                    <td class="profit-factor" style="color: red;">-0.19</td>
+                </tr><tr>
+                    <td><b>AMD</b></td>
+                    <td>200.0 / 195.0</td>
+                    <td>69.0%</td>
+                    <td>$1.35</td>
+                    <td class="profit-factor" style="color: red;">-0.20</td>
+                </tr><tr>
+                    <td><b>AFRM</b></td>
+                    <td>63.0 / 60.0</td>
+                    <td>69.4%</td>
+                    <td>$0.70</td>
+                    <td class="profit-factor" style="color: red;">-0.22</td>
+                </tr><tr>
+                    <td><b>BABA</b></td>
+                    <td>150.0 / 145.0</td>
+                    <td>69.2%</td>
+                    <td>$1.29</td>
+                    <td class="profit-factor" style="color: red;">-0.25</td>
+                </tr><tr>
+                    <td><b>ASTS</b></td>
+                    <td>69.0 / 66.0</td>
+                    <td>70.5%</td>
+                    <td>$0.55</td>
+                    <td class="profit-factor" style="color: red;">-0.33</td>
+                </tr><tr>
+                    <td><b>ANET</b></td>
+                    <td>118.0 / 115.0</td>
+                    <td>70.0%</td>
+                    <td>$0.50</td>
+                    <td class="profit-factor" style="color: red;">-0.40</td>
+                </tr><tr>
+                    <td><b>AEM</b></td>
+                    <td>160.0 / 155.0</td>
+                    <td>70.8%</td>
+                    <td>$1.00</td>
+                    <td class="profit-factor" style="color: red;">-0.46</td>
+                </tr><tr>
+                    <td><b>AVAV</b></td>
+                    <td>225.0 / 220.0</td>
+                    <td>71.6%</td>
+                    <td>$0.90</td>
+                    <td class="profit-factor" style="color: red;">-0.52</td>
+                </tr></tbody></table></div><div id="tab_20260116" class="tabcontent" style="display: none;"><h3>Top Spreads for 2026-01-16</h3><table><thead><tr><th>Ticker</th><th>Spread</th><th>Prob. Win</th><th>Net Credit</th><th>Profit Factor</th></tr></thead><tbody><tr>
+                    <td><b>APLD</b></td>
+                    <td>25.0 / 24.0</td>
+                    <td>69.3%</td>
+                    <td>$0.30</td>
+                    <td class="profit-factor" style="color: red;">-0.01</td>
+                </tr><tr>
+                    <td><b>AUPH</b></td>
+                    <td>15.0 / 14.0</td>
+                    <td>68.4%</td>
+                    <td>$0.26</td>
+                    <td class="profit-factor" style="color: red;">-0.06</td>
+                </tr><tr>
+                    <td><b>AMD</b></td>
+                    <td>200.0 / 195.0</td>
+                    <td>67.4%</td>
+                    <td>$1.55</td>
+                    <td class="profit-factor" style="color: red;">-0.08</td>
+                </tr><tr>
+                    <td><b>AFRM</b></td>
+                    <td>62.5 / 60.0</td>
+                    <td>70.3%</td>
+                    <td>$0.58</td>
+                    <td class="profit-factor" style="color: red;">-0.16</td>
+                </tr><tr>
+                    <td><b>BABA</b></td>
+                    <td>150.0 / 145.0</td>
+                    <td>67.6%</td>
+                    <td>$1.41</td>
+                    <td class="profit-factor" style="color: red;">-0.21</td>
+                </tr><tr>
+                    <td><b>ARKG</b></td>
+                    <td>28.0 / 27.0</td>
+                    <td>71.7%</td>
+                    <td>$0.05</td>
+                    <td class="profit-factor" style="color: red;">-0.23</td>
+                </tr><tr>
+                    <td><b>ANET</b></td>
+                    <td>117.5 / 115.0</td>
+                    <td>70.3%</td>
+                    <td>$0.50</td>
+                    <td class="profit-factor" style="color: red;">-0.24</td>
+                </tr><tr>
+                    <td><b>AEM</b></td>
+                    <td>160.0 / 155.0</td>
+                    <td>69.9%</td>
+                    <td>$1.10</td>
+                    <td class="profit-factor" style="color: red;">-0.40</td>
+                </tr><tr>
+                    <td><b>ARKK</b></td>
+                    <td>76.0 / 73.0</td>
+                    <td>70.4%</td>
+                    <td>$0.22</td>
+                    <td class="profit-factor" style="color: red;">-0.67</td>
+                </tr></tbody></table></div><div id="tab_20260123" class="tabcontent" style="display: none;"><h3>Top Spreads for 2026-01-23</h3><table><thead><tr><th>Ticker</th><th>Spread</th><th>Prob. Win</th><th>Net Credit</th><th>Profit Factor</th></tr></thead><tbody><tr>
+                    <td><b>AI</b></td>
+                    <td>14.5 / 13.5</td>
+                    <td>67.5%</td>
+                    <td>$0.21</td>
+                    <td class="profit-factor" style="color: red;">-0.12</td>
+                </tr><tr>
+                    <td><b>AMD</b></td>
+                    <td>195.0 / 190.0</td>
+                    <td>72.3%</td>
+                    <td>$1.25</td>
+                    <td class="profit-factor" style="color: red;">-0.14</td>
+                </tr><tr>
+                    <td><b>BABA</b></td>
+                    <td>150.0 / 145.0</td>
+                    <td>66.5%</td>
+                    <td>$1.40</td>
+                    <td class="profit-factor" style="color: red;">-0.27</td>
+                </tr><tr>
+                    <td><b>AVGO</b></td>
+                    <td>340.0 / 335.0</td>
+                    <td>68.6%</td>
+                    <td>$1.15</td>
+                    <td class="profit-factor" style="color: red;">-0.42</td>
+                </tr></tbody></table></div><div id="tab_20260220" class="tabcontent" style="display: none;"><h3>Top Spreads for 2026-02-20</h3><table><thead><tr><th>Ticker</th><th>Spread</th><th>Prob. Win</th><th>Net Credit</th><th>Profit Factor</th></tr></thead><tbody><tr>
+                    <td><b>AMD</b></td>
+                    <td>195.0 / 190.0</td>
+                    <td>68.6%</td>
+                    <td>$1.65</td>
+                    <td class="profit-factor" style="color: green;">0.08</td>
+                </tr><tr>
+                    <td><b>APLD</b></td>
+                    <td>25.0 / 24.0</td>
+                    <td>69.4%</td>
+                    <td>$0.30</td>
+                    <td class="profit-factor" style="color: red;">-0.01</td>
+                </tr><tr>
+                    <td><b>AFRM</b></td>
+                    <td>60.0 / 57.5</td>
+                    <td>71.6%</td>
+                    <td>$0.55</td>
+                    <td class="profit-factor" style="color: red;">-0.16</td>
+                </tr><tr>
+                    <td><b>BABA</b></td>
+                    <td>145.0 / 140.0</td>
+                    <td>71.9%</td>
+                    <td>$1.25</td>
+                    <td class="profit-factor" style="color: red;">-0.16</td>
+                </tr><tr>
+                    <td><b>AEM</b></td>
+                    <td>155.0 / 150.0</td>
+                    <td>72.8%</td>
+                    <td>$1.10</td>
+                    <td class="profit-factor" style="color: red;">-0.26</td>
+                </tr></tbody></table></div>
+    <script>
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(" active", ""); }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    </script>
+    </body></html>
+    
