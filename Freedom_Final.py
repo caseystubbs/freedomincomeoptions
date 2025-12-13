@@ -3,26 +3,31 @@ import yfinance as yf
 import requests
 import time
 import random
-import paramiko  # <--- NEW: Secure SFTP Library
+import paramiko
+import os
 from finvizfinance.screener.overview import Overview
-from datetime import datetime
+from datetime import datetime, timedelta
 
-# --- CONFIGURATION ---
-TRADIER_ACCESS_TOKEN = "elOrs2eZGsf7cp9JOGomCL21tUpQ" 
-
-# --- WPEngine SFTP SETTINGS ---
-FTP_HOST = "freedomincomeo.sftp.wpengine.com" 
-FTP_PORT = 2222  # WPEngine uses Port 2222 for SFTP
-FTP_USER = "freedomincomeo-laptop"
-FTP_PASS = "fMN>zWdz[][T1"
-FTP_DIR  = "/"   # WPEngine Root
+# --- CONFIGURATION (SECURE) ---
+TRADIER_ACCESS_TOKEN = os.environ.get("TRADIER_TOKEN")
+FTP_HOST = os.environ.get("FTP_HOST")
+FTP_PORT = int(os.environ.get("FTP_PORT", 2222))
+FTP_USER = os.environ.get("FTP_USER")
+FTP_PASS = os.environ.get("FTP_PASS")
+FTP_DIR  = "/"
 
 # --- SCANNER SETTINGS ---
 MIN_PRICE = 15.0          
 MIN_AVG_VOLUME = 500_000  
 TARGET_DELTA = 0.30       
-MIN_PROFIT_FACTOR = -10.0 # Show ALL trades
+MIN_PROFIT_FACTOR = -10.0 
 MAX_EXPIRATION_WEEKS = 8
+
+# --- CHECK FOR SECRETS ---
+if not TRADIER_ACCESS_TOKEN or not FTP_PASS:
+    print("❌ ERROR: Secrets not found! Make sure TRADIER_TOKEN and FTP_PASS are set in GitHub Settings (or .env locally).")
+    # For local testing without secrets, you can uncomment lines below (BUT DON'T COMMIT THEM):
+    # exit() 
 
 def get_finviz_candidates():
     print("--- Step 1: Scanning Finviz (Broad Search) ---")
@@ -87,10 +92,8 @@ def get_tradier_chain(symbol, expiration):
 
 def scan_spreads_tradier(ticker, current_price):
     opportunities = []
-    
     all_exps = get_tradier_expirations(ticker)
     if not all_exps: return []
-    
     valid_exps = [e for e in all_exps if e > datetime.now().strftime('%Y-%m-%d')]
     check_exps = valid_exps[:MAX_EXPIRATION_WEEKS]
     
@@ -101,12 +104,10 @@ def scan_spreads_tradier(ticker, current_price):
     for exp_date in check_exps:
         chain = get_tradier_chain(ticker, exp_date)
         if not chain: continue
-        
         puts = [opt for opt in chain if opt.get('option_type') == 'put' and opt.get('greeks')]
         
         short_leg = None
         closest_delta_diff = 999
-        
         for p in puts:
             delta = p['greeks'].get('delta')
             if delta is None: continue
@@ -114,15 +115,12 @@ def scan_spreads_tradier(ticker, current_price):
             if diff < closest_delta_diff:
                 closest_delta_diff = diff
                 short_leg = p
-        
         if not short_leg: continue
 
         short_strike = float(short_leg['strike'])
         target_long_strike = short_strike - target_width
-        
         long_leg = None
         closest_strike_diff = 999
-        
         for p in puts:
             s = float(p['strike'])
             if s >= short_strike: continue 
@@ -130,26 +128,19 @@ def scan_spreads_tradier(ticker, current_price):
             if diff < closest_strike_diff:
                 closest_strike_diff = diff
                 long_leg = p
-        
-        if not long_leg or closest_strike_diff > (target_width * 0.6): 
-            continue
+        if not long_leg or closest_strike_diff > (target_width * 0.6): continue
 
         long_strike = float(long_leg['strike'])
-        
         try:
             short_bid = float(short_leg.get('bid', 0)) or float(short_leg.get('last', 0))
             long_ask = float(long_leg.get('ask', 0)) or float(long_leg.get('last', 0))
-            
             net_credit = short_bid - long_ask
             if net_credit < 0.05: continue
-            
             actual_width = short_strike - long_strike
             max_risk = actual_width - net_credit
-            
             short_delta = abs(float(short_leg['greeks']['delta']))
             prob_win = 1.0 - short_delta
             prob_loss = short_delta
-            
             profit_factor = (net_credit * prob_win) - (max_risk * prob_loss)
             
             if profit_factor > MIN_PROFIT_FACTOR:
@@ -165,7 +156,10 @@ def scan_spreads_tradier(ticker, current_price):
                     "Freedom_Factor": round(profit_factor, 2)
                 })
         except: continue
-        time.sleep(0.1)
+        
+        # --- SPEED LIMIT UPDATE ---
+        # 0.6s sleep = ~100 requests/min (Safe for 120/min limit)
+        time.sleep(0.6)
         
     return opportunities
 
@@ -175,7 +169,11 @@ def generate_tabbed_html(df_results):
     top_8_dates = unique_dates[:8]
     
     top_3_trades = df_results.sort_values('Freedom_Factor', ascending=False).head(3)
-    formatted_date = datetime.now().strftime("%B, %d %Y")
+    
+    # --- TIMEZONE ADJUSTMENT ---
+    # Cloud servers are usually UTC. We subtract 5 hours for EST.
+    est_time = datetime.utcnow() - timedelta(hours=5)
+    formatted_date = est_time.strftime("Date: %B, %d %Y %I:%M %p EST")
 
     html = """
     <!DOCTYPE html>
@@ -189,11 +187,17 @@ def generate_tabbed_html(df_results):
             .logo-container { display: flex; align-items: center; }
             .logo-container img { height: 60px; margin-right: 15px; }
             .header-title { font-size: 24px; font-weight: bold; color: #333; }
-            .date-display { font-size: 16px; color: #333; }
-            .tab { overflow: hidden; background-color: #333; display: flex; justify-content: center; flex-wrap: wrap; }
-            .tab button { background-color: inherit; border: none; outline: none; cursor: pointer; padding: 14px 20px; font-size: 16px; font-weight: bold; color: white; transition: 0.3s; }
+            .date-display { font-size: 16px; color: #333; font-weight: bold; }
+            
+            /* Tab Container */
+            .tab-container { background-color: #333; padding: 10px 0; text-align: center; }
+            .tab-label { color: #ccc; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; display: block; }
+            
+            .tab { overflow: hidden; display: flex; justify-content: center; flex-wrap: wrap; }
+            .tab button { background-color: inherit; border: none; outline: none; cursor: pointer; padding: 10px 15px; font-size: 14px; font-weight: bold; color: white; transition: 0.3s; border-radius: 4px; margin: 2px; }
             .tab button:hover { background-color: #4CAF50; }
             .tab button.active { background-color: #4CAF50; }
+            
             .tabcontent { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
             .best-trades-box { background-color: #FFD700; border: 4px solid #0000FF; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
             .best-trades-title { text-align: center; color: #0000FF; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-top: 0; }
@@ -212,18 +216,31 @@ def generate_tabbed_html(df_results):
             <img src="https://freedomincomeoptions.com/wp-content/uploads/2025/03/Freedom-income-options-440-x-100.png" alt="Freedom Income Options">
             <div class="header-title">Daily Spread Scanner</div>
         </div>
-        <div class="date-display"><b>Date: """ + formatted_date + """</b></div>
+        <div class="date-display">""" + formatted_date + """</div>
     </header>
 
-    <div class="tab">
-        <button class="tablinks active" onclick="openCity(event, 'BestTrades')">★ BEST TRADES</button>
+    <div class="tab-container">
+        <span class="tab-label">Available Expirations (Days Out)</span>
+        <div class="tab">
+            <button class="tablinks active" onclick="openCity(event, 'BestTrades')">★ BEST TRADES</button>
     """
     
-    for i, date in enumerate(top_8_dates):
-        safe_id = f"tab_{date.replace('-', '')}"
-        html += f'<button class="tablinks" onclick="openCity(event, \'{safe_id}\')">{date}</button>'
+    # --- CALCULATE DAYS OUT ---
+    today = datetime.now()
+    
+    for i, date_str in enumerate(top_8_dates):
+        # Convert string '2025-12-19' to date object
+        exp_date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        days_out = (exp_date_obj - today).days + 1 # +1 to round up partial days
+        
+        safe_id = f"tab_{date_str.replace('-', '')}"
+        # LABEL: "2025-12-19 (7 Days)"
+        button_label = f"{date_str} ({days_out} Days)"
+        
+        html += f'<button class="tablinks" onclick="openCity(event, \'{safe_id}\')">{button_label}</button>'
     
     html += """
+        </div>
     </div>
 
     <div id="BestTrades" class="tabcontent" style="display: block;">
@@ -247,7 +264,6 @@ def generate_tabbed_html(df_results):
     rank = 1
     for _, row in top_3_trades.iterrows():
         ff_color = "green" if row['Freedom_Factor'] > 0 else "red"
-        
         html += f"""
         <tr class="best-row">
             <td><b>#{rank}</b></td>
@@ -310,32 +326,22 @@ def generate_tabbed_html(df_results):
 
 def upload_to_sftp(filename):
     print(f"\n--- Step 3: Uploading {filename} via SFTP (Port {FTP_PORT}) ---")
-    
     try:
-        # Create a Transport object
         transport = paramiko.Transport((FTP_HOST, FTP_PORT))
-        
-        # Connect
         transport.connect(username=FTP_USER, password=FTP_PASS)
-        
-        # Create SFTP Client
         sftp = paramiko.SFTPClient.from_transport(transport)
-        
-        # Go to directory and upload
         sftp.chdir(FTP_DIR)
         sftp.put(filename, filename)
-        
         sftp.close()
         transport.close()
-        
         print(f"✅ SUCCESS! Results are live at: https://freedomincomeoptions.com/{filename}")
-        
     except Exception as e:
         print(f"❌ SFTP Error: {e}")
 
 def main():
-    if "PASTE_YOUR" in TRADIER_ACCESS_TOKEN:
-        print("❌ ERROR: You must edit the file and paste your Tradier API Key on line 14.")
+    if not TRADIER_ACCESS_TOKEN or not FTP_PASS:
+        # Check env vars (GitHub Secrets)
+        print("❌ ERROR: Missing Secrets. Check your GitHub Settings.")
         return
 
     candidates = get_finviz_candidates()
@@ -350,11 +356,9 @@ def main():
     
     for i, t in enumerate(candidates):
         if i % 5 == 0: print(f"Scanning {i}/{len(candidates)} ({t})...")
-        
         valid_data = check_10day_volume(t)
         if valid_data:
             ops_list = scan_spreads_tradier(valid_data['Ticker'], valid_data['Price'])
-            
             if ops_list:
                 for op in ops_list:
                     all_opportunities.append(op)
@@ -363,18 +367,12 @@ def main():
     
     if all_opportunities:
         df = pd.DataFrame(all_opportunities)
-        # HTML Filename
         html_file = "credit_spread.html" 
-        
         html_content = generate_tabbed_html(df)
         with open(html_file, "w") as f:
             f.write(html_content)
-            
         print(f"✅ Scan Complete. HTML Generated: {html_file}")
-        
-        # --- UPLOAD TO WEBSITE ---
         upload_to_sftp(html_file)
-        
     else:
         print("No trades found matching criteria.")
 
