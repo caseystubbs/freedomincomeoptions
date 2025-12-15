@@ -1,38 +1,35 @@
-name: Frequent Market Scan
+name: Secret Inspector
 
-on:
-  schedule:
-    # Runs at 9:30 AM EST (14:30 UTC)
-    - cron: '30 14 * * 1-5'
-    # Runs every 30 mins from 10:00 AM to 3:30 PM EST
-    - cron: '*/30 15-20 * * 1-5'
-  workflow_dispatch:
+on: workflow_dispatch
 
 jobs:
-  run-scanner:
+  debug-secrets:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run Freedom Scanner
+      - name: Check Secrets
         env:
           TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_PORT: ${{ secrets.FTP_PORT }}
-          FTP_USER: ${{ secrets.FTP_USER }}
           FTP_PASS: ${{ secrets.FTP_PASS }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          python Freedom_Final.py
+          echo "------ DIAGNOSTIC REPORT ------"
+          
+          if [ -z "$TRADIER_TOKEN" ]; then
+            echo "❌ TRADIER_TOKEN: MISSING (The vault is empty or name is wrong)"
+          else
+            echo "✅ TRADIER_TOKEN: FOUND (Length: ${#TRADIER_TOKEN} characters)"
+          fi
+
+          if [ -z "$FTP_PASS" ]; then
+            echo "❌ FTP_PASS: MISSING"
+          else
+            echo "✅ FTP_PASS: FOUND"
+          fi
+
+          if [ -z "$TELEGRAM_TOKEN" ]; then
+            echo "❌ TELEGRAM_TOKEN: MISSING"
+          else
+            echo "✅ TELEGRAM_TOKEN: FOUND"
+          fi
+          
+          echo "-------------------------------"
