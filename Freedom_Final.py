@@ -11,10 +11,22 @@ from datetime import datetime, timedelta
 # --- CONFIGURATION (SECURE) ---
 TRADIER_ACCESS_TOKEN = os.environ.get("TRADIER_TOKEN")
 FTP_HOST = os.environ.get("FTP_HOST")
-FTP_PORT = int(os.environ.get("FTP_PORT", 2222))
 FTP_USER = os.environ.get("FTP_USER")
 FTP_PASS = os.environ.get("FTP_PASS")
 FTP_DIR  = "/"
+
+# --- ROBUST PORT HANDLING ---
+# This fixes the "ValueError" by checking if the secret is empty.
+# If empty, it defaults to 2222.
+port_str = os.environ.get("FTP_PORT")
+if port_str and port_str.strip():
+    FTP_PORT = int(port_str)
+else:
+    FTP_PORT = 2222
+
+# --- TELEGRAM SECRETS ---
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # --- SCANNER SETTINGS ---
 MIN_PRICE = 15.0          
@@ -25,9 +37,26 @@ MAX_EXPIRATION_WEEKS = 8
 
 # --- CHECK FOR SECRETS ---
 if not TRADIER_ACCESS_TOKEN or not FTP_PASS:
-    print("❌ ERROR: Secrets not found! Make sure TRADIER_TOKEN and FTP_PASS are set in GitHub Settings (or .env locally).")
-    # For local testing without secrets, you can uncomment lines below (BUT DON'T COMMIT THEM):
-    # exit() 
+    print("❌ ERROR: Secrets not found! Make sure TRADIER_TOKEN and FTP_PASS are set in GitHub Settings.")
+    # We don't exit here so the code can handle partial failures gracefully if needed
+
+# --- TELEGRAM ALERT FUNCTION ---
+def send_telegram_alert(message):
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        print("⚠️ Telegram keys missing. Skipping alert.")
+        return
+
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": message,
+        "parse_mode": "Markdown" 
+    }
+    try:
+        requests.post(url, json=payload)
+        print("🚀 Telegram Alert Sent!")
+    except Exception as e:
+        print(f"❌ Failed to send Telegram: {e}")
 
 def get_finviz_candidates():
     print("--- Step 1: Scanning Finviz (Broad Search) ---")
@@ -157,8 +186,7 @@ def scan_spreads_tradier(ticker, current_price):
                 })
         except: continue
         
-        # --- SPEED LIMIT UPDATE ---
-        # 0.6s sleep = ~100 requests/min (Safe for 120/min limit)
+        # Speed Limit for Tradier (Safe)
         time.sleep(0.6)
         
     return opportunities
@@ -170,8 +198,7 @@ def generate_tabbed_html(df_results):
     
     top_3_trades = df_results.sort_values('Freedom_Factor', ascending=False).head(3)
     
-    # --- TIMEZONE ADJUSTMENT ---
-    # Cloud servers are usually UTC. We subtract 5 hours for EST.
+    # EST Time Adjustment
     est_time = datetime.utcnow() - timedelta(hours=5)
     formatted_date = est_time.strftime("Date: %B, %d %Y %I:%M %p EST")
 
@@ -188,16 +215,12 @@ def generate_tabbed_html(df_results):
             .logo-container img { height: 60px; margin-right: 15px; }
             .header-title { font-size: 24px; font-weight: bold; color: #333; }
             .date-display { font-size: 16px; color: #333; font-weight: bold; }
-            
-            /* Tab Container */
             .tab-container { background-color: #333; padding: 10px 0; text-align: center; }
             .tab-label { color: #ccc; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; display: block; }
-            
             .tab { overflow: hidden; display: flex; justify-content: center; flex-wrap: wrap; }
             .tab button { background-color: inherit; border: none; outline: none; cursor: pointer; padding: 10px 15px; font-size: 14px; font-weight: bold; color: white; transition: 0.3s; border-radius: 4px; margin: 2px; }
             .tab button:hover { background-color: #4CAF50; }
             .tab button.active { background-color: #4CAF50; }
-            
             .tabcontent { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
             .best-trades-box { background-color: #FFD700; border: 4px solid #0000FF; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
             .best-trades-title { text-align: center; color: #0000FF; font-size: 22px; font-weight: 900; text-transform: uppercase; margin-top: 0; }
@@ -225,18 +248,13 @@ def generate_tabbed_html(df_results):
             <button class="tablinks active" onclick="openCity(event, 'BestTrades')">★ BEST TRADES</button>
     """
     
-    # --- CALCULATE DAYS OUT ---
     today = datetime.now()
     
     for i, date_str in enumerate(top_8_dates):
-        # Convert string '2025-12-19' to date object
         exp_date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-        days_out = (exp_date_obj - today).days + 1 # +1 to round up partial days
-        
+        days_out = (exp_date_obj - today).days + 1 
         safe_id = f"tab_{date_str.replace('-', '')}"
-        # LABEL: "2025-12-19 (7 Days)"
         button_label = f"{date_str} ({days_out} Days)"
-        
         html += f'<button class="tablinks" onclick="openCity(event, \'{safe_id}\')">{button_label}</button>'
     
     html += """
@@ -340,7 +358,6 @@ def upload_to_sftp(filename):
 
 def main():
     if not TRADIER_ACCESS_TOKEN or not FTP_PASS:
-        # Check env vars (GitHub Secrets)
         print("❌ ERROR: Missing Secrets. Check your GitHub Settings.")
         return
 
@@ -372,6 +389,18 @@ def main():
         with open(html_file, "w") as f:
             f.write(html_content)
         print(f"✅ Scan Complete. HTML Generated: {html_file}")
+        
+        # --- SEND TELEGRAM ALERT ---
+        top_3 = df.sort_values('Freedom_Factor', ascending=False).head(3)
+        if not top_3.empty:
+            msg = f"🚀 *Freedom Scan Complete!*\nFound {len(df)} opportunities.\n\n"
+            msg += "*🏆 Top 3 Trades:*\n"
+            for _, row in top_3.iterrows():
+                msg += f"• *{row['Ticker']}*: {row['Spread_Str']} | Win: {row['Prob_Win']}% | Credit: ${row['Net_Credit']:.2f}\n"
+            
+            msg += "\nView full list: https://freedomincomeoptions.com/credit_spread.html"
+            send_telegram_alert(msg)
+        
         upload_to_sftp(html_file)
     else:
         print("No trades found matching criteria.")
