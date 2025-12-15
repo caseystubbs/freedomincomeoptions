@@ -25,18 +25,8 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-- name: Debug Secrets
-        env:
-          TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
-        run: |
-          if [ -z "$TRADIER_TOKEN" ]; then
-            echo "❌ TRADIER_TOKEN is EMPTY"
-          else
-            echo "✅ TRADIER_TOKEN is FOUND (Length: ${#TRADIER_TOKEN})"
-          fi
       - name: Run Freedom Scanner
-        # THIS SECTION IS CRITICAL - IT UNLOCKS THE VAULT
-        env: 
+        env:
           TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
           FTP_HOST: ${{ secrets.FTP_HOST }}
           FTP_PORT: ${{ secrets.FTP_PORT }}
