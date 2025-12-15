@@ -2,14 +2,10 @@ name: Frequent Market Scan
 
 on:
   schedule:
-    # 1. Runs at 9:30 AM EST (14:30 UTC)
+    # Runs at 9:30 AM EST (14:30 UTC)
     - cron: '30 14 * * 1-5'
-    
-    # 2. Runs every 30 mins from 10:00 AM to 3:30 PM EST
-    # (15:00 UTC to 20:30 UTC)
+    # Runs every 30 mins from 10:00 AM to 3:30 PM EST
     - cron: '*/30 15-20 * * 1-5'
-
-  # Allows you to click "Run" manually anytime
   workflow_dispatch:
 
 jobs:
@@ -30,5 +26,14 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Freedom Scanner
+        # THIS SECTION IS CRITICAL - IT UNLOCKS THE VAULT
+        env: 
+          TRADIER_TOKEN: ${{ secrets.TRADIER_TOKEN }}
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASS: ${{ secrets.FTP_PASS }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python Freedom_Final.py
