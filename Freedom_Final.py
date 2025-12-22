@@ -71,8 +71,12 @@ def get_finviz_candidates():
     try:
         foverview = Overview()
         foverview.set_filter(filters_dict=filters_dict)
-        df_finviz = foverview.screener_view()
         
+        # FIX: We tell Finviz to sort by 'Volatility' BEFORE downloading.
+        # This ensures we get the true top movers, not just tickers starting with 'A'.
+        df_finviz = foverview.screener_view(order='Volatility', ascend=False)
+        
+        # Double check locally just in case
         if 'Volatility' in df_finviz.columns:
             df_finviz['Vol_Num'] = df_finviz['Volatility'].astype(str).str.replace('%', '').astype(float)
             df_finviz = df_finviz.sort_values(by='Vol_Num', ascending=False)
