@@ -3,4 +3,4 @@ yfinance
 requests
 finvizfinance
 paramiko
-lxml
+lxmlschedule
