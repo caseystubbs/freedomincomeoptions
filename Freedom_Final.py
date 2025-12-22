@@ -60,27 +60,25 @@ def send_telegram_alert(message):
     except Exception as e:
         print(f"❌ Failed to send Telegram: {e}")
 
-# --- UPDATED FINVIZ SCANNER (Trend + Growth) ---
 def get_finviz_candidates():
     print("--- Step 1: Scanning Finviz (Trend & Growth) ---")
     filters_dict = {
         'Price': 'Over $15', 
-        'Average Volume': 'Over 1M',          # UPDATED: Strict 1M Floor
+        'Average Volume': 'Over 1M',
         'Option/Short': 'Optionable',
         'Volatility': 'Month - Over 3%', 
         'RSI (14)': 'Not Overbought (<60)',
-        '200-Day SMA': 'Price above SMA200',  # NEW: Must be in uptrend
-        'EPS growth this year': 'Positive (>0%)' # NEW: Must have fundamental growth
+        '200-Day Simple Moving Average': 'Price above SMA200',  # FIX: Full Name Required
+        'EPS growth this year': 'Positive (>0%)'
     }
     
     try:
         foverview = Overview()
         foverview.set_filter(filters_dict=filters_dict)
         
-        # FIX: Sort by Volatility (Month) to get true movers
+        # Sort by Volatility (Month)
         df_finviz = foverview.screener_view(order='Volatility (Month)', ascend=False)
         
-        # Double check locally just in case
         if 'Volatility' in df_finviz.columns:
             df_finviz['Vol_Num'] = df_finviz['Volatility'].astype(str).str.replace('%', '').astype(float)
             df_finviz = df_finviz.sort_values(by='Vol_Num', ascending=False)
@@ -90,7 +88,7 @@ def get_finviz_candidates():
     except Exception as e:
         print(f"Error connecting to Finviz: {e}")
         return []
-
+        
 # --- UPDATED DEEP CHECK (Earnings Safety) ---
 def check_10day_volume(ticker):
     try:
