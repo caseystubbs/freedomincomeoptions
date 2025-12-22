@@ -1,4 +1,7 @@
 import pandas as pd
+import warnings
+# Silence the annoying "FutureWarning" from finvizfinance
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import yfinance as yf
 import requests
 import time
@@ -30,15 +33,14 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # --- SCANNER SETTINGS ---
 MIN_PRICE = 15.0          
-MIN_AVG_VOLUME = 500_000  
+MIN_AVG_VOLUME = 1_000_000   # UPDATED: 1 Million Safety Floor
 TARGET_DELTA = 0.30       
 MIN_PROFIT_FACTOR = -10.0 
 MAX_EXPIRATION_WEEKS = 8
 
 # --- CHECK FOR SECRETS ---
 if not TRADIER_ACCESS_TOKEN or not FTP_PASS:
-    print("❌ ERROR: Secrets not found! Make sure TRADIER_TOKEN and FTP_PASS are set in GitHub Settings.")
-    # We don't exit here so the code can handle partial failures gracefully if needed
+    print("❌ ERROR: Secrets not found! Make sure TRADIER_TOKEN and FTP_PASS are set in GitHub/Railway Settings.")
 
 # --- TELEGRAM ALERT FUNCTION ---
 def send_telegram_alert(message):
@@ -58,21 +60,24 @@ def send_telegram_alert(message):
     except Exception as e:
         print(f"❌ Failed to send Telegram: {e}")
 
+# --- UPDATED FINVIZ SCANNER (Trend + Growth) ---
 def get_finviz_candidates():
-    print("--- Step 1: Scanning Finviz (Broad Search) ---")
+    print("--- Step 1: Scanning Finviz (Trend & Growth) ---")
     filters_dict = {
         'Price': 'Over $15', 
-        'Average Volume': 'Over 500K',
+        'Average Volume': 'Over 1M',          # UPDATED: Strict 1M Floor
         'Option/Short': 'Optionable',
         'Volatility': 'Month - Over 3%', 
-        'RSI (14)': 'Not Overbought (<60)' 
+        'RSI (14)': 'Not Overbought (<60)',
+        '200-Day SMA': 'Price above SMA200',  # NEW: Must be in uptrend
+        'EPS growth this year': 'Positive (>0%)' # NEW: Must have fundamental growth
     }
     
     try:
         foverview = Overview()
         foverview.set_filter(filters_dict=filters_dict)
         
-        # FIX: Changed 'Volatility' to 'Volatility (Month)' to match Finviz requirements
+        # FIX: Sort by Volatility (Month) to get true movers
         df_finviz = foverview.screener_view(order='Volatility (Month)', ascend=False)
         
         # Double check locally just in case
@@ -80,19 +85,58 @@ def get_finviz_candidates():
             df_finviz['Vol_Num'] = df_finviz['Volatility'].astype(str).str.replace('%', '').astype(float)
             df_finviz = df_finviz.sort_values(by='Vol_Num', ascending=False)
             
-        print(f"Found {len(df_finviz)} candidates.")
+        print(f"Found {len(df_finviz)} candidates matching Trend & Growth criteria.")
         return df_finviz['Ticker'].tolist()
     except Exception as e:
         print(f"Error connecting to Finviz: {e}")
         return []
 
+# --- UPDATED DEEP CHECK (Earnings Safety) ---
 def check_10day_volume(ticker):
     try:
         stock = yf.Ticker(ticker)
+        
+        # 1. Check Volume (Last 10 Days Average)
         hist = stock.history(period="1mo")
         if len(hist) < 10: return None
+        
+        avg_vol = hist['Volume'].tail(10).mean()
+        if avg_vol < 1_000_000: 
+            # print(f"Skipping {ticker}: Vol {int(avg_vol)} < 1M")
+            return None
+            
+        # 2. Check Earnings Date (Must be > 30 Days away)
+        try:
+            calendar = stock.calendar
+            # Handle different yfinance versions (sometimes it returns a dict, sometimes a dataframe)
+            if calendar is not None:
+                # If it's a dataframe or dict with "Earnings Date"
+                if hasattr(calendar, "get") and calendar.get("Earnings Date") is not None:
+                    next_earnings_list = calendar.get("Earnings Date")
+                elif "Earnings Date" in calendar:
+                    next_earnings_list = calendar["Earnings Date"]
+                else:
+                    next_earnings_list = []
+
+                # Grab the first date
+                if len(next_earnings_list) > 0:
+                    next_earnings = next_earnings_list[0]
+                    # Make sure date is offset-naive for comparison
+                    if hasattr(next_earnings, "replace"):
+                        next_earnings = next_earnings.replace(tzinfo=None)
+                    
+                    days_until = (next_earnings - datetime.now()).days
+                    
+                    if 0 <= days_until < 30:
+                        # print(f"Skipping {ticker}: Earnings in {days_until} days.")
+                        return None
+        except Exception as e:
+            # If we can't confirm earnings, we proceed with caution (or skip if you prefer)
+            pass
+
         return { "Ticker": ticker, "Price": hist['Close'].iloc[-1] }
-    except: return None
+    except: 
+        return None
 
 def get_tradier_expirations(symbol):
     url = "https://api.tradier.com/v1/markets/options/expirations"
@@ -368,7 +412,7 @@ def main():
     if not candidates: return
     
     if len(candidates) > 60:
-        print(f"Selecting Top 60 High-Volatility candidates...")
+        print(f"Selecting Top 60 High-Quality candidates...")
         candidates = candidates[:60]
 
     print(f"\n--- Deep Analysis on {len(candidates)} Tickers (Showing ALL Spreads) ---")
