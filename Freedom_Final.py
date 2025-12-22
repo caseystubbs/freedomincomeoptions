@@ -72,9 +72,8 @@ def get_finviz_candidates():
         foverview = Overview()
         foverview.set_filter(filters_dict=filters_dict)
         
-        # FIX: We tell Finviz to sort by 'Volatility' BEFORE downloading.
-        # This ensures we get the true top movers, not just tickers starting with 'A'.
-        df_finviz = foverview.screener_view(order='Volatility', ascend=False)
+        # FIX: Changed 'Volatility' to 'Volatility (Month)' to match Finviz requirements
+        df_finviz = foverview.screener_view(order='Volatility (Month)', ascend=False)
         
         # Double check locally just in case
         if 'Volatility' in df_finviz.columns:
