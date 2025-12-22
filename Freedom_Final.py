@@ -33,7 +33,7 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # --- SCANNER SETTINGS ---
 MIN_PRICE = 15.0          
-MIN_AVG_VOLUME = 1_000_000   # UPDATED: 1 Million Safety Floor
+MIN_AVG_VOLUME = 1_000_000   # Strict 1M Floor
 TARGET_DELTA = 0.30       
 MIN_PROFIT_FACTOR = -10.0 
 MAX_EXPIRATION_WEEKS = 8
@@ -60,25 +60,30 @@ def send_telegram_alert(message):
     except Exception as e:
         print(f"❌ Failed to send Telegram: {e}")
 
+# --- UPDATED FINVIZ SCANNER (Trend & Growth) ---
 def get_finviz_candidates():
     print("--- Step 1: Scanning Finviz (Trend & Growth) ---")
+    
+    # NOTE: Finviz filter keys are very sensitive to spacing.
+    # 'EPS growththis year' and '200-Day Simple Moving Average' must be exact.
     filters_dict = {
         'Price': 'Over $15', 
         'Average Volume': 'Over 1M',
         'Option/Short': 'Optionable',
         'Volatility': 'Month - Over 3%', 
         'RSI (14)': 'Not Overbought (<60)',
-        '200-Day Simple Moving Average': 'Price above SMA200',  # FIX: Full Name Required
-        'EPS growth this year': 'Positive (>0%)'
+        '200-Day Simple Moving Average': 'Price above SMA200',
+        'EPS growththis year': 'Positive (>0%)' 
     }
     
     try:
         foverview = Overview()
         foverview.set_filter(filters_dict=filters_dict)
         
-        # Sort by Volatility (Month)
+        # Sort by Volatility (Month) to get true movers
         df_finviz = foverview.screener_view(order='Volatility (Month)', ascend=False)
         
+        # Double check locally just in case
         if 'Volatility' in df_finviz.columns:
             df_finviz['Vol_Num'] = df_finviz['Volatility'].astype(str).str.replace('%', '').astype(float)
             df_finviz = df_finviz.sort_values(by='Vol_Num', ascending=False)
@@ -88,7 +93,7 @@ def get_finviz_candidates():
     except Exception as e:
         print(f"Error connecting to Finviz: {e}")
         return []
-        
+
 # --- UPDATED DEEP CHECK (Earnings Safety) ---
 def check_10day_volume(ticker):
     try:
@@ -108,7 +113,6 @@ def check_10day_volume(ticker):
             calendar = stock.calendar
             # Handle different yfinance versions (sometimes it returns a dict, sometimes a dataframe)
             if calendar is not None:
-                # If it's a dataframe or dict with "Earnings Date"
                 if hasattr(calendar, "get") and calendar.get("Earnings Date") is not None:
                     next_earnings_list = calendar.get("Earnings Date")
                 elif "Earnings Date" in calendar:
